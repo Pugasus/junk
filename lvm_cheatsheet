@@ -1,0 +1,29 @@
+LVM Cheatsheet
+
+*** When you've resized a virtual disk in vmware ***
+fdisk /dev/sdx
+Delete partition and recreate using all the new sectors
+Set partition flag as hex code 8e for Linux LVM partition
+
+lvmdiskscan - so lvm picks up the new partition size
+pvresize /dev/sdx
+lvresize -l +100%FREE /dev/mapper/...
+xfs_growfs /dev/mapper/... - Old centos uses resize2fs
+
+*** When you've added a new disk ***
+echo "- - -" > /sys/class/scsi_host/host0/scan //scsi scan for magic no reboot skillz
+fdisk /dev/sdx
+Create new primary partition
+Set partition flag as hex code 8e for Linux LVM partition
+
+pvcreate /dev/sdx //To prep new disk for lvm
+vgextend VolumeGroupName /dev/sdx //To add new physical disk to volume group
+lvextend LogicalVolumeName /dev/sdx
+xfs_growfs /dev/mapper/...
+
+*** Lazy and add a non-lvm disk ***
+echo "- - -" > /sys/class/scsi_host/host0/scan
+fdisk /dev/sdx
+Create partitions
+mkfs.xfs
+mount -t xfs /dev/sdx /mountpoint
