@@ -1,0 +1,38 @@
+To improve speeds, disable comp-lzo and append these lines to client config
+sndbuf 1000000
+rcvbuf 1000000
+tun-mtu 1480
+mssfix 1360
+
+OpenVPN chooses small buffers by default which will be a bottleneck, so increase these to a large number.
+The tunnel-mtu should be specified less than 1500 since that will be the default on most intermediary devices.
+mssfix announces to TCP sessions using the tunnel to limit their TCP packets such that after they are encapsulated they do not exceed 1360 bytes.
+
+In addition to the above changes on the client, make these changes on the server config.
+
+tun-mtu 1480
+mssfix 1360
+
+tcp-queue-limit 128
+txqueuelen 2000
+tcp-nodelay
+sndbuf 1000000
+rcvbuf 1000000
+push "sndbuf 1000000"
+push "rcvbuf 1000000"
+
+Replicate on the server the buffer, mtu, and mssfix options.
+tcp-queue-limit and txqueuelen determine how much data to queue before dropping packets. Increasing this improves speeds on networks where the client may have a fluctuating bandwidth (e.g mobile broadband/satellite connections)
+tcp-nodelay sets tcp sessions to send their packets immediately rather that combining small packets into larger container packets (Nagle algorithm). Helps reduce latency.
+
+
+If you have an openvpn server with a dynamic IP, a client can sometimes not successfully reconnect when this IP address changes, even with resolv_retry set to infinite.
+The openvpn service can be configured to automatically restart in the event of any errors that cause the service to stop.
+
+This involves customising the systemd service files openvpn client uses.
+On a debian system, edit these two files
+/lib/systemd/system/openvpn.service
+/lib/systemd/system/openvpn@.service
+so the type is forking, and append in the [Service] section this line,
+Restart=always
+
