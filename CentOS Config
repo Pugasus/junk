@@ -11,3 +11,11 @@ PREFIX="24"
 GATEWAY="x.x.x.x"
 DNS1="x.x.x.x"
 DNS2="x.x.x.x"
+
+
+###### Firewall #######
+<rule family="ipv4">
+  <source address="192.168.0.0/16"/>
+  <service name="ssh"/>
+  <accept/>
+</rule>
