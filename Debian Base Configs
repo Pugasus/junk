@@ -1,0 +1,20 @@
+###### Set DHCP ######
+Edit /etc/network/interfaces
+
+auto eth0
+    allow-hotplug eth0
+    iface eth0 inet dhcp
+    
+###### Set Static IP ######
+Edit in /etc/network/interfaces
+iface eth0 inet manual
+
+Add to /etc/dhcpcd.conf
+interface eth0
+static ip_address=x.x.x.x/x
+static routers=x.x.x.x
+static domain_name_servers=x.x.x.x y.y.y.y
+
+###### Set Static Route ######
+Create file /usr/lib/dhcpcd/dhcpcd-hooks/{metric}-{name}-route
+ip route add x.x.x.x/x via x.x.x.x
