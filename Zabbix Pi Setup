@@ -1,0 +1,28 @@
+###### Zabbix Server Setup on Raspberry PI ######
+
+Check for latest info on Zabbix Wiki
+http://www.zabbix.org/wiki/Zabbix_on_the_Raspberry_Pi_(OS_Raspbian)
+
+Or get precompiled ARM debian jessie .deb files
+https://github.com/imkebe/zabbix3-rpi
+zabbix-server-mysql_3.0.2-1+jessie_armhf.deb
+zabbix-frontend-php_3.0.2-1+jessie_all.deb
+zabbix-agent_3.0.2-1+jessie_armhf.deb
+
+Install MySQL, Apache, PHP
+apt-get install apache2 libapache2-mod-auth-mysql php5-mysql mysql-common mysql-server mysql-client
+
+Run MySQL post install setup
+mysql_secure_installation
+
+Allow 
+grant all privileges on zabbix.* to zabbix@localhost identified by 'password';
+
+Install zabbix packages
+sudo dpkg -i zabbix-*
+
+Append Zabbix settings into Apache config
+/etc/zabbix/apache.conf append contents to /etc/apache2/apache2.conf
+
+Allow through firewall tcp ports 80, 10050, 10051
+Hit the Zabbix url http://x.x.x.x/zabbix and run through setup
