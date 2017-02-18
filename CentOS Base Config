@@ -19,3 +19,7 @@ DNS2="x.x.x.x"
   <service name="ssh"/>
   <accept/>
 </rule>
+
+###### Static Routes ######
+Create a file /etc/sysconfig/network-scripts/route-eth0
+x.x.x.x/x via x.x.x.x dev eth0
