@@ -3,6 +3,7 @@
 # A generic TS downloader. It requires a text file input as the first argument which
 # contains a list of the TS URLs. It then downloads/concatonates each in order to a single TS file
 # Then converts them to an mp4 file
+# Written for Debian, and requires avconv to be installed for the mp4 conversion
 #########################################
 import urllib
 import socket
