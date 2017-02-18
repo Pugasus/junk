@@ -1,10 +1,10 @@
-####### Cent OS Config #######
+####### CentOS Base Configs #######
 
-Change MAC address
+### Change MAC address ###
 /usr/lib/udev/rules.d/60-net.rules
 
-Set static IP
-/etc/sysconfig/network-scripts/ifcfg-eth0
+### Set static IP ###
+Edit /etc/sysconfig/network-scripts/ifcfg-eth0
 BOOTPROTO="static"
 IPADDR="x.x.x.x"
 PREFIX="24"
@@ -12,14 +12,14 @@ GATEWAY="x.x.x.x"
 DNS1="x.x.x.x"
 DNS2="x.x.x.x"
 
-
-###### Firewall #######
+### Firewall ###
+Edit /etc/firewalld/zones/public.xml
 <rule family="ipv4">
   <source address="192.168.0.0/16"/>
   <service name="ssh"/>
   <accept/>
 </rule>
 
-###### Static Routes ######
+### Static Routes ###
 Create a file /etc/sysconfig/network-scripts/route-eth0
 x.x.x.x/x via x.x.x.x dev eth0
