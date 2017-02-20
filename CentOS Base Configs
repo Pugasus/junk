@@ -1,9 +1,13 @@
-####### CentOS Base Configs #######
+######################## CentOS Base Configs ########################
 
-### Change MAC address ###
+##################################
+####### Change MAC address #######
+##################################
 /usr/lib/udev/rules.d/60-net.rules
 
-### Set static IP ###
+#############################
+####### Set static IP #######
+#############################
 Edit /etc/sysconfig/network-scripts/ifcfg-eth0
 BOOTPROTO="static"
 IPADDR="x.x.x.x"
@@ -12,7 +16,9 @@ GATEWAY="x.x.x.x"
 DNS1="x.x.x.x"
 DNS2="x.x.x.x"
 
-### Firewall ###
+########################
+####### Firewall #######
+########################
 Edit /etc/firewalld/zones/public.xml
 <rule family="ipv4">
   <source address="192.168.0.0/16"/>
@@ -20,6 +26,31 @@ Edit /etc/firewalld/zones/public.xml
   <accept/>
 </rule>
 
-### Static Routes ###
+#############################
+####### Static Routes #######
+#############################
 Create a file /etc/sysconfig/network-scripts/route-eth0
 x.x.x.x/x via x.x.x.x dev eth0
+
+#########################################
+####### Systemd Creating Services #######
+#########################################
+Put your script that does stuff in something like /usr/bin/example
+Create a unit file /etc/systemd/system/example.service
+with the content
+*********
+[Unit]
+Description=Script description
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/example
+
+[Install]
+WantedBy=multi-user.target
+*********
+
+Tell systemd to check for new/changed units
+systemctl daemon-reload
+
+############################
