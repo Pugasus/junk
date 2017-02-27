@@ -10,7 +10,7 @@ mssfix announces to TCP sessions using the tunnel to limit their TCP packets suc
 
 In addition to the above changes on the client, make these changes on the server config.
 
-tun-mtu 1480
+tun-mtu 1400
 mssfix 1360
 
 tcp-queue-limit 128
