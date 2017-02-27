@@ -1,0 +1,20 @@
+#How to pull a Hyper-V vhd file from a windows share and write to local device
+
+sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe"
+sudo apt-get update
+sudo apt-get install qemu-system-x86 -y
+sudo apt-get install samba -y
+sudo apt-get install gddrescue -y
+
+#Make local directory for mounting Windows share
+sudo mkdir /mnt/win_share
+#Mount the share, provide Windows username/password if needed.
+#Extra backslashes are needed as escape characters
+sudo mount.cifs \\\\Windows share\\Folder /mnt/win_share -o username=x
+#Prepare qemu module 'nbd' for loading a disk image on a device
+sudo modprobe nbd max_part=8
+#Mount the vhd file to the new nbd0 qemu device
+sudo qemu-nbd -c /dev/nbd0 -f vhdx "Local directory path to vhdx file" -r
+
+#Copy whole device or whatever you need to local storage
+sudo ddrescue -f -v /dev/nbd0 /dev/sdb
