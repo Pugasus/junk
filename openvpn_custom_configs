@@ -1,7 +1,7 @@
 To improve speeds, disable comp-lzo and append these lines to client config
 sndbuf 1000000
 rcvbuf 1000000
-tun-mtu 1480
+tun-mtu 1400
 mssfix 1360
 
 OpenVPN chooses small buffers by default which will be a bottleneck, so increase these to a large number.
