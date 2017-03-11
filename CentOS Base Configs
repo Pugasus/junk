@@ -25,6 +25,12 @@ Edit /etc/firewalld/zones/public.xml
   <service name="ssh"/>
   <accept/>
 </rule>
+#Or
+<rule family="ipv4">
+  <source address="192.168.0.0/16"/>
+  <port protocol="tcp" port="22"/>
+  <accept/>
+</rule>
 
 #############################
 ####### Static Routes #######
