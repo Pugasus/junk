@@ -5,6 +5,7 @@
 # It requires the first argument to be the URL to the first TS file
 # Second argument should be your output filename
 # Third argument is the number of TS pieces to download
+# The script expects each TS url to end in the format 00000.ts, 00001.ts etc
 # Written for Debian, and requires avconv to be installed for the mp4 conversion
 #########################################
 import urllib
