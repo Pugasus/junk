@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #########################################
-# A generic TS downloader which downloads/concatonates each TS piece in order to a single TS file
-# Then converts them to an mp4 file
+# A generic TS downloader which downloads/concatonates each TS piece in order into a single TS file
+# It then converts this to an mp4 file
 # It requires the first argument to be the URL to the first TS file
 # Second argument should be your output filename
 # Third argument is the number of TS pieces to download
@@ -20,9 +20,6 @@ import os
 socket.setdefaulttimeout(5)
 count = 0
 curr_progress = 0
-
-def update_progress(progress):
-   print '\r[{0}] {1}%'.format('#'*(progress/50), progress)
 
 def progress(count, total, suffix=''):
     bar_len = 60
