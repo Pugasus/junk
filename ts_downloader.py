@@ -1,8 +1,10 @@
 #!/usr/bin/python
 #########################################
-# A generic TS downloader. It requires a text file input as the first argument which
-# contains a list of the TS URLs. It then downloads/concatonates each in order to a single TS file
+# A generic TS downloader which downloads/concatonates each TS piece in order to a single TS file
 # Then converts them to an mp4 file
+# It requires the first argument to be the URL to the first TS file
+# Second argument should be your output filename
+# Third argument is the number of TS pieces to download
 # Written for Debian, and requires avconv to be installed for the mp4 conversion
 #########################################
 import urllib
@@ -31,25 +33,22 @@ def progress(count, total, suffix=''):
     sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', suffix))
     sys.stdout.flush()
 
-if len(sys.argv) < 2:
-   print "Specify input file"
+if len(sys.argv) < 4:
+   print "Specify TS URL, output name, and number of TS pieces"
    sys.exit()
 
-output = sys.argv[1] + ".ts"
+output = sys.argv[2] + ".ts"
 input = sys.argv[1]
 fileOutput = open(output, 'w+')
-fileInput = open(input, 'r')
-lineList = fileInput.readlines()
-fileInput.close()
 
 print "Downloading TS to", output
 
-lastTS = re.search('[0-9]{3}\.',lineList[len(lineList)-1]).group(0)
-lastTS = lastTS.translate(None, string.punctuation)
-lastTS = int(lastTS)
+lastTS = int(sys.argv[3])
+input = input[:-8]
 
-for line in lineList:
-    line.strip()
+while count <= lastTS:
+    current_ts = str(count)
+    line = input + current_ts.zfill(5) + ".ts"
     try:
        response = urllib.urlopen(line)
        fileOutput.write(response.read())
@@ -61,7 +60,7 @@ for line in lineList:
     except:
        print ""
        print "Timeout on part ", count
-    
+       
     progress(count, lastTS)
     count = count + 1
     if 'str' in line:
@@ -71,7 +70,7 @@ for line in lineList:
 
 fileOutput.close()
 print ""
-mp4Output = output + ".mp4"
+mp4Output = output[:-3] + ".mp4"
 bashCommand = ["avconv", "-i", output, "-vcodec", "copy", "-acodec", "copy", mp4Output]
 cwd = os.getcwd()
 print "Converting to mp4. Output file -", mp4Output
