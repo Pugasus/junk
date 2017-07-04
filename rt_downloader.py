@@ -24,18 +24,37 @@ def update_progress(progress):
    print '\r[{0}] {1}%'.format('#'*(progress/50), progress)
 
 def progress(count, total, suffix=''):
-    bar_len = 60
-    filled_len = int(round(bar_len * count / float(total)))
+	bar_len = 60
+	filled_len = int(round(bar_len * count / float(total)))
 
-    percents = round(100.0 * count / float(total), 1)
-    bar = '=' * filled_len + '-' * (bar_len - filled_len)
+	percents = round(100.0 * count / float(total), 1)
+	bar = '=' * filled_len + '-' * (bar_len - filled_len)
 
-    sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', suffix))
-    sys.stdout.flush()
+	sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', suffix))
+	sys.stdout.flush()
 
-if len(sys.argv) < 4:
-   print "Specify TS URL, output name, and number of TS pieces"
-   sys.exit()
+if len(sys.argv) < 2:
+	print "Specify video URL"
+	sys.exit()
+
+urlToScrape = sys.argv[1]
+urlContent =""
+
+try:
+	urlContent = urllib.urlopen(urlToScrape).read()
+except:
+	print ""
+	print "Timeout on fetching url"
+	sys.exit()
+
+if re.match("m3u8", urlContent) is None:
+	print "Couldn't find TS index data on that url"
+	sys.exit()
+
+tsIndex = re.search("m3u8", urlContent)
+print tsIndex.group(0)
+
+sys.exit()
 
 output = sys.argv[2] + ".ts"
 input = sys.argv[1]
@@ -47,26 +66,26 @@ lastTS = int(sys.argv[3])
 input = input[:-8]
 
 while count <= lastTS:
-    current_ts = str(count)
-    line = input + current_ts.zfill(5) + ".ts"
-    try:
-       response = urllib.urlopen(line)
-       fileOutput.write(response.read())
-    except KeyboardInterrupt:
-       print ""
-       print "Cancelling download"
-       fileOutput.close()
-       sys.exit()
-    except:
-       print ""
-       print "Timeout on part ", count
-       
-    progress(count, lastTS)
-    count = count + 1
-    if 'str' in line:
-       break
-    if line == '':
-       break
+	current_ts = str(count)
+	line = input + current_ts.zfill(5) + ".ts"
+	try:
+		response = urllib.urlopen(line)
+		fileOutput.write(response.read())
+	except KeyboardInterrupt:
+		print ""
+		print "Cancelling download"
+		fileOutput.close()
+		sys.exit()
+	except:
+		print ""
+		print "Timeout on part ", count
+
+	progress(count, lastTS)
+	count = count + 1
+	if 'str' in line:
+		break
+	if line == '':
+		break
 
 fileOutput.close()
 print ""
